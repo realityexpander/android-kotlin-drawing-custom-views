@@ -22,6 +22,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.graphics.Typeface
 import android.view.accessibility.AccessibilityNodeInfo
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.withStyledAttributes
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
@@ -65,11 +66,13 @@ class DialView @JvmOverloads constructor(
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
         textSize = 55.0f
-        typeface = Typeface.create("", Typeface.BOLD)
+        if(!isInEditMode){
+            typeface = ResourcesCompat.getFont(context, R.font.sourcesanspro_regular)
+        } else typeface = Typeface.create("sans", Typeface.BOLD)
     }
 
     private var radius = 0.0f                  // Radius of the circle.
-    private var fanSpeed = FanSpeed.OFF        // The active selection.
+    private var fanSpeed = FanSpeed.LOW        // The active selection.
     //Point at which to draw label and indicator circle position. PointF is a point
     //with floating-point coordinates.
     private val pointPosition: PointF = PointF(0.0f, 0.0f)
@@ -78,11 +81,12 @@ class DialView @JvmOverloads constructor(
     private val fanSpeedMediumColor:Int
     private val fanSpeedMaxColor:Int
 
+
     init {
         isClickable = true
 
         val typedArray = context.obtainStyledAttributes(attrs,R.styleable.DialView)
-        fanSpeedLowColor=typedArray.getColor(R.styleable.DialView_fanColor1,0)
+        fanSpeedLowColor=typedArray.getColor(R.styleable.DialView_fanColor1,Color.RED)
         fanSpeedMediumColor = typedArray.getColor(R.styleable.DialView_fanColor2,0)
         fanSpeedMaxColor = typedArray.getColor(R.styleable.DialView_fanColor3,0)
         typedArray.recycle()
